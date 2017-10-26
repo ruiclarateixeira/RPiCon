@@ -1,0 +1,15 @@
+{
+  "name": "rpicon",
+  "version": "1.0.0",
+  "description": "Work with your raspberry pi remotely",
+  "main": "index.js",
+  "author": "Rui Teixeira",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron src/main/main.js"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "vue": "^2.5.2"
+  }
+}
