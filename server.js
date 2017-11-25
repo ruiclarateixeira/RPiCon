@@ -1,13 +1,14 @@
 /**
  * TODO:
  * Get rid of the debugging variable
- * Return error instead of success
+ * Return error instead of success for errors
  * 
  */
 
 var express = require("express");
 var app = express();
-var jsonParser = require("body-parser").raw();
+var bodyParser = require("body-parser");
+var fs = require("fs");
 const { spawn } = require("child_process");
 
 var debuggingGlobalVars = {
@@ -19,7 +20,7 @@ app.listen(3000, function() {
 });
 
 app.use(express.static("public"));
-
+app.use(bodyParser.json());
 app.get("/run", run_python);
 
 function run_python(req, res) {
@@ -36,17 +37,19 @@ app.get("/dir", (req, res) => {
     return;
   }
 
-  res.send(JSON.stringify(["./python.py"]));
+  fs.readdir(req.query.path, function(err, items) {
+    res.send(JSON.stringify(items));
+  });
 });
 
-app.post("/file", jsonParser, (req, res) => {
+app.post("/file", (req, res) => {
   if (req.query.path == null) {
     res.send(JSON.stringify({ error: "No path provided" }));
     return;
   }
   console.log(JSON.stringify(req.body));
   if (req.body.initial == null) {
-    res.send(JSON.stringify({ error: "No initial value providd" }));
+    res.send(JSON.stringify({ error: "No initial value provided" }));
     return;
   }
 
@@ -55,12 +58,12 @@ app.post("/file", jsonParser, (req, res) => {
     return;
   }
 
-  if (req.body.inital != debuggingGlobalVars.fileContents[path]) {
+  if (req.body.inital != debuggingGlobalVars.fileContents[req.query.path]) {
     res.send(JSON.stringify({ error: "File has changed" }));
     return;
   }
 
-  debuggingGlobalVars.fileContents[path] = req.body.final;
+  debuggingGlobalVars.fileContents[req.query.path] = req.body.final;
 
   res.send({ success: "Saved" });
 });

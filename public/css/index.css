@@ -1,0 +1,28 @@
+#code {
+  display: block;
+  float: left;
+  width: 70%;
+  height: 200px;
+}
+
+#run {
+  float: left;
+}
+
+#fileSelection {
+  display: block;
+  float: right;
+  width: 30%;
+}
+
+#dirPath {
+  display: block;
+  float: left;
+  width: 100%;
+}
+
+#files {
+  display: block;
+  float: left;
+  width: 100%;
+}
