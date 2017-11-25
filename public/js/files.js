@@ -1,10 +1,14 @@
 var cache = {};
 
+/**
+ * Store file content to file system
+ * @param {*string} filePath 
+ */
 function saveFile(filePath) {
   var content = $("#code").val();
   var payload = {
     initial: getCachedValue("code"),
-    final: "test"
+    final: content
   };
 
   $.ajax({
@@ -22,6 +26,10 @@ function saveFile(filePath) {
   });
 }
 
+/**
+ * Load file content from file system
+ * @param {*string} filePath 
+ */
 function loadFile(filePath) {
   $.get("/file?path=" + filePath, data => {
     $("#code").val(data);
@@ -29,13 +37,24 @@ function loadFile(filePath) {
   });
 }
 
+/**
+ * Get list of fils in directory
+ * @param {*string} path 
+ * @param {*function} callback 
+ */
 function getFiles(path, callback) {
   $.get("/dir?path=" + path, data => {
-    callback(JSON.parse(data));
+    callback(path, JSON.parse(data));
   });
 }
 
-function refreshFiles(files) {
+/**
+ * Refresh files in the file picker
+ * @param {*array} files 
+ */
+function refreshFiles(fullPath, files) {
+  if (!fullPath.endsWith("/")) fullPath += "/";
+
   $("#files").empty();
   for (var index in files) {
     $("#files").append(
@@ -45,12 +64,25 @@ function refreshFiles(files) {
       })
     );
   }
+
+  $("option").bind("dblclick", function() {
+    loadFile(fullPath + $(this).val());
+  });
 }
 
+/**
+ * Store the file content in cache
+ * @param {*string} key 
+ * @param {*string} value 
+ */
 function cacheValue(key, value) {
   cache[key] = value;
 }
 
+/**
+ * Get file content stored in cache
+ * @param {*string} key 
+ */
 function getCachedValue(key) {
   if (cache[key] == null) return "";
   return cache[key];

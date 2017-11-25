@@ -74,7 +74,11 @@ app.get("/file", (req, res) => {
     return;
   }
 
-  if (debuggingGlobalVars.fileContents[req.query.path])
-    res.send(debuggingGlobalVars.fileContents[req.query.path]);
-  else res.send("");
+  fs.readFile(req.query.path, function read(err, data) {
+    if (err) {
+      throw err;
+    }
+
+    res.send(data);
+  });
 });
