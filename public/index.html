@@ -1,0 +1,65 @@
+<html>
+
+<head>
+    <title>RPI Con</title>
+</head>
+
+<body>
+    <h1>RPi Con</h1>
+    <textarea id="code"></textarea>
+    <button onclick="run()" id="run ">Run!</button>
+    <button onclick="loadFile('filepath')">Load File</button>
+    <button onclick="saveFile('filepath')">Load File</button>
+    <script src="./js/jquery-1.8.1.js "></script>
+    <script>
+        var cache = {};
+        function run() {
+            var codeArea = $("#code ");
+        }
+
+        function loadFile(filePath) {
+            $.get("/file?path=" + filePath, (data) => {
+                $("#code").val(data);
+                cacheValue(data);
+            });
+        };
+
+        function saveFile(filePath) {
+            var content = $("#code").val();
+            var payload = {
+                initial: getCachedValue("code"),
+                final: content
+            };
+
+            $.post()
+            $.post("/file?path=" + filePath, JSON.stringify(payload), (data) => {
+                console.log(JSON.stringify(data));
+            });
+        }
+
+        function cacheValue(key, value) {
+            cache[key] = value;
+        }
+
+        function getCachedValue(key) {
+            if (cache[key] == null)
+                return "";
+            return cache[key];
+        }
+    </script>
+    <style>
+        #code {
+            display: block;
+            float: left;
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+        }
+
+        #run {
+            float: left;
+        }
+    </style>
+</body>
+
+</html>
