@@ -1,24 +1,23 @@
 var cache = {};
-
+var currentFile = "";
 /**
  * Store file content to file system
- * @param {*string} filePath 
  */
-function saveFile(filePath) {
+function saveFile() {
   var content = $("#code").val();
   var payload = {
-    initial: getCachedValue("code"),
+    initial: getCachedValue(currentFile),
     final: content
   };
 
   $.ajax({
     type: "POST",
-    url: "/file?path=" + filePath,
+    url: "/file?path=" + currentFile,
     data: JSON.stringify(payload),
     contentType: "application/json; charset=utf-8",
     dataType: "json",
     success: function(data) {
-      console.log("Saved!");
+      console.log(JSON.stringify(data));
     },
     failure: function(errMsg) {
       console.log("Failed to save!");
@@ -33,7 +32,8 @@ function saveFile(filePath) {
 function loadFile(filePath) {
   $.get("/file?path=" + filePath, data => {
     $("#code").val(data);
-    cacheValue(data);
+    cacheValue(filePath, data);
+    currentFile = filePath;
   });
 }
 

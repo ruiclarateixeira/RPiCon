@@ -47,7 +47,7 @@ app.post("/file", (req, res) => {
     res.send(JSON.stringify({ error: "No path provided" }));
     return;
   }
-  console.log(JSON.stringify(req.body));
+
   if (req.body.initial == null) {
     res.send(JSON.stringify({ error: "No initial value provided" }));
     return;
@@ -58,14 +58,24 @@ app.post("/file", (req, res) => {
     return;
   }
 
-  if (req.body.inital != debuggingGlobalVars.fileContents[req.query.path]) {
-    res.send(JSON.stringify({ error: "File has changed" }));
-    return;
-  }
+  fs.readFile(req.query.path, function read(err, data) {
+    if (err) {
+      throw err;
+    }
 
-  debuggingGlobalVars.fileContents[req.query.path] = req.body.final;
+    if (req.body.initial != data) {
+      res.send(JSON.stringify({ error: "File has changed" }));
+      return;
+    }
 
-  res.send({ success: "Saved" });
+    fs.writeFile(req.query.path, req.body.final, function(err) {
+      if (err) {
+        throw err;
+      }
+
+      res.send({ success: "Saved" });
+    });
+  });
 });
 
 app.get("/file", (req, res) => {
