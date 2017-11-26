@@ -10,6 +10,8 @@
     <h1>RPi Con</h1>
     <div id="code">
         <textarea id="codeArea"></textarea>
+        <div id="termout">
+        </div>
     </div>
     <div id="fileSelection">
         <input id="dirPath" type="text" />
@@ -22,6 +24,7 @@
     <script src="./js/jquery-1.8.1.js "></script>
     <script src="./js/codemirror.js"></script>
     <script src="./js/files.js"></script>
+    <script src="./js/code.js"></script>
     <script>
         $("#dirPath").on("keyup", function (e) {
             var path = $("#dirPath").val();
@@ -33,12 +36,6 @@
         setEditor(CodeMirror.fromTextArea(document.getElementById("codeArea"), {
             lineNumbers: true,
         }));
-
-        function run() {
-            $.get("/run?path=" + getCurrentFile(), function (data) {
-                console.log(data);
-            });
-        }
     </script>
 </body>
 

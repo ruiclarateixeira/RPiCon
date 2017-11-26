@@ -31,3 +31,9 @@
   clear: both;
   width: 100%;
 }
+
+#termout {
+  padding: 10px;
+  overflow-y: scroll;
+  height: 100px;
+}
