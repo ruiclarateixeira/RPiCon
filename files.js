@@ -1,4 +1,5 @@
 var utils = require("./utils.js");
+var fs = require("fs");
 
 exports.getFile = (req, res) => {
   utils.checkParams(req, res, ["path"]);

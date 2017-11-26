@@ -7,7 +7,6 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
-var fs = require("fs");
 var files = require("./files.js");
 var utils = require("./utils.js");
 const opn = require("opn");
