@@ -2,12 +2,15 @@
 
 <head>
     <title>RPI Con</title>
+    <link href="./css/codemirror.css" rel="stylesheet" />
     <link href="./css/index.css" rel="stylesheet" />
 </head>
 
 <body>
     <h1>RPi Con</h1>
-    <textarea id="code"></textarea>
+    <div id="code">
+        <textarea id="codeArea"></textarea>
+    </div>
     <div id="fileSelection">
         <input id="dirPath" type="text" />
         <select id="files" size="10">
@@ -17,6 +20,7 @@
     <button onclick="saveFile()">Save</button>
     <button onclick="run()">Run</button>
     <script src="./js/jquery-1.8.1.js "></script>
+    <script src="./js/codemirror.js"></script>
     <script src="./js/files.js"></script>
     <script>
         $("#dirPath").on("keyup", function (e) {
@@ -25,6 +29,10 @@
                 getFiles(path, refreshFiles);
             }
         });
+
+        setEditor(CodeMirror.fromTextArea(document.getElementById("codeArea"), {
+            lineNumbers: true,
+        }));
 
         function run() {
             $.get("/run?path=" + getCurrentFile(), function (data) {

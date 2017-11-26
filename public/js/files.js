@@ -1,15 +1,20 @@
 var cache = {};
 var currentFile = "";
+var editor = null;
 
 function getCurrentFile() {
   return currentFile;
+}
+
+function setEditor(newEditor) {
+  if (editor === null) editor = newEditor;
 }
 
 /**
  * Store file content to file system
  */
 function saveFile() {
-  var content = $("#code").val();
+  var content = editor.getValue();
   var payload = {
     initial: getCachedValue(currentFile),
     final: content
@@ -36,7 +41,7 @@ function saveFile() {
  */
 function loadFile(filePath) {
   $.get("/file?path=" + filePath, data => {
-    $("#code").val(data);
+    editor.setValue(data);
     cacheValue(filePath, data);
     currentFile = filePath;
   });
