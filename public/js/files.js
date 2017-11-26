@@ -1,5 +1,10 @@
 var cache = {};
 var currentFile = "";
+
+function getCurrentFile() {
+  return currentFile;
+}
+
 /**
  * Store file content to file system
  */

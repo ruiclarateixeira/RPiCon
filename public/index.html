@@ -15,6 +15,7 @@
     </div>
     <div class="clearfix"></div>
     <button onclick="saveFile()">Save</button>
+    <button onclick="run()">Run</button>
     <script src="./js/jquery-1.8.1.js "></script>
     <script src="./js/files.js"></script>
     <script>
@@ -24,6 +25,12 @@
                 getFiles(path, refreshFiles);
             }
         });
+
+        function run() {
+            $.get("/run?path=" + getCurrentFile(), function (data) {
+                console.log(data);
+            });
+        }
     </script>
 </body>
 
