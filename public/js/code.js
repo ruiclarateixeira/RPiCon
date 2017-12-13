@@ -1,4 +1,4 @@
-function run() {
+export function run() {
   $.get("http://localhost:3000/run?path=" + getCurrentFile(), function(data) {
     var socket = new WebSocket("ws://localhost:8001");
     socket.onopen = function(event) {

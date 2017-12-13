@@ -3,29 +3,18 @@
 <head>
     <title>RPI Con</title>
     <link href="./css/codemirror.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/photon.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link href="./css/index.css" rel="stylesheet" />
 </head>
 
 <body>
-    <h1>RPi Con</h1>
-    <div id="code">
-        <textarea id="codeArea"></textarea>
-        <div id="termout">
-        </div>
-    </div>
-    <div id="fileSelection">
-        <input id="dirPath" type="text" />
-        <select id="files" size="10">
-        </select>
-    </div>
-    <div class="clearfix"></div>
-    <button onclick="saveFile()">Save</button>
-    <button onclick="run()">Run</button>
+    <script>
+        require('../dist/bundle.js')
+    </script>
     <script src="./js/jquery-1.8.1.js "></script>
     <script src="./js/codemirror.js"></script>
     <script src="./js/files.js"></script>
-    <script src="./js/code.js"></script>
     <script>
         $("#dirPath").on("keyup", function (e) {
             var path = $("#dirPath").val();
@@ -40,6 +29,7 @@
         setEditor(CodeMirror.fromTextArea(document.getElementById("codeArea"), {
             lineNumbers: true,
         }));
+
     </script>
 </body>
 

@@ -41,3 +41,8 @@ body {
   overflow-y: scroll;
   height: 100px;
 }
+
+.window-content {
+  display: block;
+  width: 100%;
+}

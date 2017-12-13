@@ -97,3 +97,5 @@ function getCachedValue(key) {
   if (cache[key] == null) return "";
   return cache[key];
 }
+
+module.exports = { saveFile };
