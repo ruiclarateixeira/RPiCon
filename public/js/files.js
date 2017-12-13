@@ -48,39 +48,6 @@ function loadFile(filePath) {
 }
 
 /**
- * Get list of fils in directory
- * @param {*string} path
- * @param {*function} callback
- */
-function getFiles(path, callback) {
-  $.get("http://localhost:3000/dir?path=" + path, data => {
-    callback(path, JSON.parse(data));
-  });
-}
-
-/**
- * Refresh files in the file picker
- * @param {*array} files
- */
-function refreshFiles(fullPath, files) {
-  if (!fullPath.endsWith("/")) fullPath += "/";
-
-  $("#files").empty();
-  for (var index in files) {
-    $("#files").append(
-      $("<option>", {
-        value: files[index],
-        text: files[index]
-      })
-    );
-  }
-
-  $("option").bind("dblclick", function() {
-    loadFile(fullPath + $(this).val());
-  });
-}
-
-/**
  * Store the file content in cache
  * @param {*string} key
  * @param {*string} value

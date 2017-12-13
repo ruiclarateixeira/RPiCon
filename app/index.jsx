@@ -1,4 +1,4 @@
-import { h, textarea, div, render } from "preact";
+import { h, textarea, div, render, Component } from "preact";
 import {
   Header,
   Title,
@@ -8,40 +8,51 @@ import {
   NavGroup,
   Table
 } from "preact-photon";
+import { CodeEditor, FilePicker } from "./code.jsx";
 import { saveFile } from "../public/js/files.js";
 import { run } from "../public/js/code.js";
 
-console.log(saveFile);
-console.log(run);
-
-const Code = () => (
-  <div id="code" class="pane">
-    <textarea id="codeArea" />
-    <div id="termout" />
-  </div>
-);
-
-const FileSelect = () => (
-  <div id="fileSelection">
-    <input id="dirPath" type="text" />
-    <select id="files" size="10" />
-  </div>
-);
-
-render(
-  <div class="window">
-    <Header>
-      <Title>RPi Con</Title>
-    </Header>
-    <div class="window-content">
-      <Code />
-      <FileSelect />
-      <div class="clearfix" />
-      <div>
-        <button onClick={saveFile}>Save</button>
-        <button onClick={run}>Run</button>
+class Code extends Component {
+  render({ code }, state) {
+    return (
+      <div id="code" class="pane">
+        <CodeEditor code={code} onUpdate={this.onUpdate} />
+        <div id="termout" />
       </div>
-    </div>
-  </div>,
-  document.body
-);
+    );
+  }
+}
+
+class RPiCon extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      code: ""
+    };
+  }
+
+  render(props, { code }) {
+    return (
+      <div class="window">
+        <Header>
+          <Title>RPi Con</Title>
+        </Header>
+        <div class="window-content">
+          <Code code={code} />
+          <FilePicker
+            onLoadFile={path => {
+              this.setState({ code: path });
+            }}
+          />
+          <div class="clearfix" />
+          <div>
+            <button onClick={saveFile}>Save</button>
+            <button onClick={run}>Run</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+render(<RPiCon />, document.body);
