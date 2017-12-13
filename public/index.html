@@ -32,16 +32,6 @@
             if (e.keyCode == 13) {
                 getFiles(path, refreshFiles);
             }
-            else if (e.keyCode == 9) {
-                getPartialMatches(path, refreshFiles);
-            }
-        });
-
-        $("#dirPath").on("keydown", function (e) {
-            var path = $("#dirPath").val();
-            if (e.keyCode == 9) {
-                e.preventDefault();
-            }
         });
 
         $("#dirPath").val("/");
