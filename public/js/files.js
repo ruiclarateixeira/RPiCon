@@ -37,7 +37,7 @@ function saveFile() {
 
 /**
  * Load file content from file system
- * @param {*string} filePath 
+ * @param {*string} filePath
  */
 function loadFile(filePath) {
   $.get("/file?path=" + filePath, data => {
@@ -49,8 +49,8 @@ function loadFile(filePath) {
 
 /**
  * Get list of fils in directory
- * @param {*string} path 
- * @param {*function} callback 
+ * @param {*string} path
+ * @param {*function} callback
  */
 function getFiles(path, callback) {
   $.get("/dir?path=" + path, data => {
@@ -60,7 +60,7 @@ function getFiles(path, callback) {
 
 /**
  * Refresh files in the file picker
- * @param {*array} files 
+ * @param {*array} files
  */
 function refreshFiles(fullPath, files) {
   if (!fullPath.endsWith("/")) fullPath += "/";
@@ -82,8 +82,8 @@ function refreshFiles(fullPath, files) {
 
 /**
  * Store the file content in cache
- * @param {*string} key 
- * @param {*string} value 
+ * @param {*string} key
+ * @param {*string} value
  */
 function cacheValue(key, value) {
   cache[key] = value;
@@ -91,7 +91,7 @@ function cacheValue(key, value) {
 
 /**
  * Get file content stored in cache
- * @param {*string} key 
+ * @param {*string} key
  */
 function getCachedValue(key) {
   if (cache[key] == null) return "";

@@ -49,7 +49,7 @@ var server = ws
   .listen(8001);
 
 function run_python(req, res) {
-  utils.checkParams(req, res, ["path"]);
+  if (!utils.checkParams(req, res, ["path"])) return;
   scriptsToRun[index] = {
     path: req.query.path
   };

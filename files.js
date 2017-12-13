@@ -2,11 +2,12 @@ var utils = require("./utils.js");
 var fs = require("fs");
 
 exports.getFile = (req, res) => {
-  utils.checkParams(req, res, ["path"]);
+  if (!utils.checkParams(req, res, ["path"])) return;
 
   fs.readFile(req.query.path, function read(err, data) {
     if (err) {
-      throw err;
+      res.status(500);
+      res.send(JSON.stringify({ error: err.name + " " + err.message }));
     }
 
     res.send(data);
@@ -14,11 +15,12 @@ exports.getFile = (req, res) => {
 };
 
 exports.saveFile = (req, res) => {
-  utils.checkParams(req, res, ["path"], ["initial", "final"]);
+  if (!utils.checkParams(req, res, ["path"], ["initial", "final"])) return;
 
   fs.readFile(req.query.path, function read(err, data) {
     if (err) {
-      throw err;
+      res.status(500);
+      res.send(JSON.stringify({ error: err.name + " " + err.message }));
     }
 
     if (req.body.initial != data) {
@@ -28,7 +30,8 @@ exports.saveFile = (req, res) => {
 
     fs.writeFile(req.query.path, req.body.final, function(err) {
       if (err) {
-        throw err;
+        res.status(500);
+        res.send(JSON.stringify({ error: err.name + " " + err.message }));
       }
 
       res.send({ success: "Saved" });
@@ -37,7 +40,7 @@ exports.saveFile = (req, res) => {
 };
 
 exports.listDirectory = (req, res) => {
-  utils.checkParams(req, res, ["path"]);
+  if (!utils.checkParams(req, res, ["path"])) return;
 
   fs.readdir(req.query.path, function(err, items) {
     res.send(JSON.stringify(items));
