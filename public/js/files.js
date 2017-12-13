@@ -22,7 +22,7 @@ function saveFile() {
 
   $.ajax({
     type: "POST",
-    url: "/file?path=" + currentFile,
+    url: "http://localhost:3000/file?path=" + currentFile,
     data: JSON.stringify(payload),
     contentType: "application/json; charset=utf-8",
     dataType: "json",
@@ -40,7 +40,7 @@ function saveFile() {
  * @param {*string} filePath
  */
 function loadFile(filePath) {
-  $.get("/file?path=" + filePath, data => {
+  $.get("http://localhost:3000/file?path=" + filePath, data => {
     editor.setValue(data);
     cacheValue(filePath, data);
     currentFile = filePath;
@@ -53,7 +53,7 @@ function loadFile(filePath) {
  * @param {*function} callback
  */
 function getFiles(path, callback) {
-  $.get("/dir?path=" + path, data => {
+  $.get("http://localhost:3000/dir?path=" + path, data => {
     callback(path, JSON.parse(data));
   });
 }

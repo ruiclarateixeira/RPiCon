@@ -65,5 +65,3 @@ function run_python(req, res) {
   res.send({ token: index });
   index++;
 }
-
-opn("http://localhost:3000/");

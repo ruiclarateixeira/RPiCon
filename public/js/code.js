@@ -1,5 +1,5 @@
 function run() {
-  $.get("/run?path=" + getCurrentFile(), function(data) {
+  $.get("http://localhost:3000/run?path=" + getCurrentFile(), function(data) {
     var socket = new WebSocket("ws://localhost:8001");
     socket.onopen = function(event) {
       socket.send("RUN " + data.token);
