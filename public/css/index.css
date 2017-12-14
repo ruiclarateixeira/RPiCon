@@ -1,10 +1,16 @@
 #termout {
   padding: 10px;
   overflow-y: scroll;
-  height: 100px;
+  background-color: darkslategrey;
+  color: white;
 }
 
 .window-content {
   display: block;
   width: 100%;
+}
+
+#termout-title {
+  margin: 0;
+  vertical-align: bottom;
 }

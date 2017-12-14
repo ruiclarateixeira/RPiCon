@@ -93,7 +93,7 @@ export class CodeEditor extends Component {
       });
   }
 
-  render({ path, onChange }, { code }) {
+  render({ path, onChange, height }, { code }) {
     var options = {
       lineNumbers: true
     };
@@ -103,6 +103,7 @@ export class CodeEditor extends Component {
         theme="github"
         id="codeArea"
         width="100%"
+        height={height}
         value={code}
         onChange={code => {
           this.setState({ code });

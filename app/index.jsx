@@ -4,21 +4,42 @@ import { CodeEditor, FilePicker } from "./code.jsx";
 import { saveFile } from "../public/js/files.js";
 import { run } from "../public/js/code.js";
 
+const HEADER_HEIGHT = 61;
+
 class RPiCon extends Component {
   constructor(props) {
     super(props);
     this.state = {
       path: "",
       initialCode: "",
-      code: ""
+      code: "",
+      width: 0,
+      height: 0
     };
   }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener("resize", this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions = () => {
+    this.setState({
+      width: window.innerWidth,
+      height: window.innerHeight - HEADER_HEIGHT
+    });
+  };
 
   loadFile = path => {
     this.setState({ path: path });
   };
 
-  render(props, { path }) {
+  render(props, { path, height }) {
+    var codeHeight = height * 0.7;
     return (
       <div class="window">
         <Header>
@@ -51,9 +72,15 @@ class RPiCon extends Component {
                 onLoad={initialCode =>
                   this.setState({ initialCode: initialCode, code: initialCode })
                 }
+                height={codeHeight.toString()}
               />
-              <p>Output:</p>
-              <div id="termout" />
+              <p
+                id="termout-title"
+                style={{ height: height * 0.04, marginTop: height * 0.01 }}
+              >
+                Console Output
+              </p>
+              <div id="termout" style={{ height: height * 0.25 }} />
             </div>
           </div>
         </div>
