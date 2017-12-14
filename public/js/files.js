@@ -1,15 +1,3 @@
-var cache = {};
-var currentFile = "";
-var editor = null;
-
-function getCurrentFile() {
-  return currentFile;
-}
-
-function setEditor(newEditor) {
-  if (editor === null) editor = newEditor;
-}
-
 /**
  * Store file content to file system
  */
@@ -33,24 +21,6 @@ function saveFile() {
       console.log("Failed to save!");
     }
   });
-}
-
-/**
- * Store the file content in cache
- * @param {*string} key
- * @param {*string} value
- */
-function cacheValue(key, value) {
-  cache[key] = value;
-}
-
-/**
- * Get file content stored in cache
- * @param {*string} key
- */
-function getCachedValue(key) {
-  if (cache[key] == null) return "";
-  return cache[key];
 }
 
 module.exports = { saveFile };

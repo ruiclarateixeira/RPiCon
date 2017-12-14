@@ -31,7 +31,7 @@ class RPiCon extends Component {
           <div class="clearfix" />
           <ButtonGroup>
             <Button onClick={saveFile}>Save</Button>
-            <Button onClick={run}>Run</Button>
+            <Button onClick={() => run(path)}>Run</Button>
           </ButtonGroup>
         </div>
       </div>
