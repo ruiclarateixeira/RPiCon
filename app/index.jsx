@@ -23,6 +23,21 @@ class RPiCon extends Component {
       <div class="window">
         <Header>
           <Title>RPi Con</Title>
+          <div class="toolbar-actions">
+            <div class="btn-group pull-right">
+              <Button
+                class="btn btn-large"
+                onClick={() =>
+                  saveFile(path, this.state.initialCode, this.state.code)
+                }
+              >
+                <span class="icon icon-floppy" />&nbsp;Save
+              </Button>
+              <Button class="btn btn-large" onClick={() => run(path)}>
+                <span class="icon icon-play" />&nbsp;Run
+              </Button>
+            </div>
+          </div>
         </Header>
         <div class="window-content">
           <div class="pane-group">
@@ -37,18 +52,8 @@ class RPiCon extends Component {
                   this.setState({ initialCode: initialCode, code: initialCode })
                 }
               />
+              <p>Output:</p>
               <div id="termout" />
-              <div class="clearfix" />
-              <ButtonGroup>
-                <Button
-                  onClick={() =>
-                    saveFile(path, this.state.initialCode, this.state.code)
-                  }
-                >
-                  Save
-                </Button>
-                <Button onClick={() => run(path)}>Run</Button>
-              </ButtonGroup>
             </div>
           </div>
         </div>
