@@ -68,7 +68,6 @@ export class CodeEditor extends Component {
   componentWillReceiveProps({ path, onLoad }, { code }) {
     if (path == this.state.path) return;
 
-    console.log("Loading file");
     fetch("http://localhost:3000/file?path=" + path)
       .then(result => result.text())
       .then(code => {
