@@ -35,7 +35,7 @@ export class FilePicker extends Component {
     if (!path.endsWith("/")) path += "/";
 
     return (
-      <div id="fileSelection">
+      <div>
         <input
           id="dirPath"
           type="text"
@@ -62,16 +62,22 @@ export class FilePicker extends Component {
 export class CodeEditor extends Component {
   constructor(props) {
     super(props);
-    this.state = { code: "" };
+    this.state = { code: "", path: "" };
   }
 
-  componentWillReceiveProps({ path }, { code }) {
+  componentWillReceiveProps({ path, onLoad }, { code }) {
+    if (path == this.state.path) return;
+
+    console.log("Loading file");
     fetch("http://localhost:3000/file?path=" + path)
       .then(result => result.text())
-      .then(code => this.setState({ code }));
+      .then(code => {
+        this.setState({ code, path });
+        onLoad(code);
+      });
   }
 
-  render({ path }, { code }) {
+  render({ path, onChange }, { code }) {
     var options = {
       lineNumbers: true
     };
@@ -82,6 +88,10 @@ export class CodeEditor extends Component {
         id="codeArea"
         width="100%"
         value={code}
+        onChange={code => {
+          this.setState({ code });
+          onChange(code);
+        }}
         editorProps={{ $blockScrolling: true }}
       />
     );
