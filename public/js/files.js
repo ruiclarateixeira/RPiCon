@@ -36,18 +36,6 @@ function saveFile() {
 }
 
 /**
- * Load file content from file system
- * @param {*string} filePath
- */
-function loadFile(filePath) {
-  $.get("http://localhost:3000/file?path=" + filePath, data => {
-    editor.setValue(data);
-    cacheValue(filePath, data);
-    currentFile = filePath;
-  });
-}
-
-/**
  * Store the file content in cache
  * @param {*string} key
  * @param {*string} value

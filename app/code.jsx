@@ -42,7 +42,18 @@ export class FilePicker extends Component {
 }
 
 export class CodeEditor extends Component {
-  render({ code }, state) {
+  constructor(props) {
+    super(props);
+    this.state = { code: "" };
+  }
+
+  componentWillReceiveProps({ path }, { code }) {
+    fetch("http://localhost:3000/file?path=" + path)
+      .then(result => result.text())
+      .then(code => this.setState({ code }));
+  }
+
+  render({ path }, { code }) {
     var options = {
       lineNumbers: true
     };
