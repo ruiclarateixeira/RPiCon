@@ -10,7 +10,8 @@ export class FilePicker extends Component {
     super(props);
     this.state = {
       path: "/",
-      files: []
+      files: [],
+      selected: ""
     };
     this.loadFiles();
   }
@@ -31,30 +32,46 @@ export class FilePicker extends Component {
     this.setState({ path: event.target.value });
   };
 
+  select = file => {
+    this.setState({ selected: file });
+  };
+
+  getItemClass = file => {
+    var className = "list-group-item";
+    if (this.state.selected == file) className += " Active";
+
+    return className;
+  };
+
   render({ onLoadFile }, { path, files }) {
     if (!path.endsWith("/")) path += "/";
 
     return (
-      <div>
-        <input
-          id="dirPath"
-          type="text"
-          value={path}
-          onKeyUp={this.keyUp}
-          onChange={this.handleInputChange}
-        />
-        <select id="files" size="10">
-          {files.map(file => (
-            <option
-              onDblClick={() => {
-                onLoadFile(path + file);
-              }}
-            >
-              {file}
-            </option>
-          ))}
-        </select>
-      </div>
+      <ul class="list-group">
+        <li class="list-group-header">
+          <input
+            class="form-control"
+            type="text"
+            value={path}
+            placeholder="Path"
+            onKeyUp={this.keyUp}
+            onChange={this.handleInputChange}
+          />
+        </li>
+
+        {files.map(file => (
+          <li
+            class=""
+            onDblClick={() => {
+              onLoadFile(path + file);
+            }}
+            onClick={() => this.select(file)}
+            className={this.getItemClass(file)}
+          >
+            {file}
+          </li>
+        ))}
+      </ul>
     );
   }
 }

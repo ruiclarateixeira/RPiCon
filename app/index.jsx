@@ -41,10 +41,9 @@ class RPiCon extends Component {
               <div class="clearfix" />
               <ButtonGroup>
                 <Button
-                  onClick={() => {
-                    console.log(JSON.stringify(this.state));
-                    saveFile(path, this.state.initialCode, this.state.code);
-                  }}
+                  onClick={() =>
+                    saveFile(path, this.state.initialCode, this.state.code)
+                  }
                 >
                   Save
                 </Button>
