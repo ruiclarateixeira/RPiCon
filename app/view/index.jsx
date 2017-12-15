@@ -1,8 +1,8 @@
 import { h, textarea, div, render, Component } from "preact";
 import { Header, Title, Button, ButtonGroup, NavGroup } from "preact-photon";
 import { CodeEditor, FilePicker } from "./code.jsx";
-import { saveFile } from "../public/js/files.js";
-import { run } from "../public/js/code.js";
+import { saveFile } from "../../public/js/files.js";
+import { run } from "../../public/js/code.js";
 
 const HEADER_HEIGHT = 61;
 
