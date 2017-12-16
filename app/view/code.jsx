@@ -41,7 +41,6 @@ export class FilePicker extends Component {
 
   loadItem = (name, callback) => {
     var fullPath = this.state.path + name;
-    console.log(fullPath);
     fetch("http://localhost:3000/file/meta?path=" + fullPath)
       .then(result => result.json())
       .then(stats => {
