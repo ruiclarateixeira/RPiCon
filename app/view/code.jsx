@@ -2,6 +2,7 @@ import { h, Component } from "preact";
 import AceEditor from "react-ace";
 import "brace/mode/python";
 import "brace/theme/github";
+import { notifyMe } from "./utils.js";
 
 const ENTER_KEY_CODE = 13;
 
@@ -9,25 +10,30 @@ export class FilePicker extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      path: "/",
+      inputValue: "/",
       files: [],
       selected: ""
     };
-    this.loadFiles();
+    this.loadFiles("/");
   }
 
-  loadFiles = () => {
-    fetch("http://localhost:3000/dir?path=" + this.state.path)
+  loadFiles = path => {
+    fetch("http://localhost:3000/dir?path=" + path)
       .then(result => result.json())
-      .then(files => this.setState({ files }));
+      .then(files => {
+        this.setState({ files, path, inputValue: path });
+      })
+      .catch(error => {
+        console.log(JSON.stringify(error));
+        notifyMe("Failed to load " + path);
+      });
   };
 
   keyUp = event => {
     if (event.keyCode == ENTER_KEY_CODE) {
       var path = this.state.inputValue;
       if (!path.endsWith("/")) path += "/";
-      this.setState({ path: path });
-      this.loadFiles();
+      this.loadFiles(path);
     }
   };
 
@@ -44,10 +50,8 @@ export class FilePicker extends Component {
     fetch("http://localhost:3000/file/meta?path=" + fullPath)
       .then(result => result.json())
       .then(stats => {
-        if (stats.isDirectory) {
-          this.setState({ path: fullPath + "/" });
-          this.loadFiles();
-        } else callback(fullPath);
+        if (stats.isDirectory) this.loadFiles(fullPath + "/");
+        else callback(fullPath);
       });
   };
 
@@ -58,14 +62,14 @@ export class FilePicker extends Component {
     return className;
   };
 
-  render({ onLoadFile }, { path, files }) {
+  render({ onLoadFile }, { inputValue, files }) {
     return (
       <ul class="list-group">
         <li class="list-group-header">
           <input
             class="form-control"
             type="text"
-            value={path}
+            value={inputValue}
             placeholder="Path"
             onKeyUp={this.keyUp}
             onChange={this.handleInputChange}
