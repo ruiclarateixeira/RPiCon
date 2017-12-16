@@ -34,6 +34,7 @@ exports.saveFile = (req, res) => {
     }
 
     if (req.body.initial != data) {
+      res.status(500);
       res.send(JSON.stringify({ error: "File has changed" }));
       return;
     }

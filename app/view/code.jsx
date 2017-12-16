@@ -2,7 +2,7 @@ import { h, Component } from "preact";
 import AceEditor from "react-ace";
 import "brace/mode/python";
 import "brace/theme/github";
-import { notifyMe } from "./utils.js";
+import { notifyMe, handleServiceResponse } from "./utils.js";
 
 const ENTER_KEY_CODE = 13;
 
@@ -19,14 +19,9 @@ export class FilePicker extends Component {
 
   loadFiles = path => {
     fetch("http://localhost:3000/dir?path=" + path)
-      .then(result => result.json())
-      .then(files => {
-        this.setState({ files, path, inputValue: path });
-      })
-      .catch(error => {
-        console.log(JSON.stringify(error));
-        notifyMe("Failed to load " + path);
-      });
+      .then(handleServiceResponse)
+      .then(files => this.setState({ files, path, inputValue: path }))
+      .catch(error => notifyMe("ERROR Loading File", path));
   };
 
   keyUp = event => {
@@ -48,11 +43,12 @@ export class FilePicker extends Component {
   loadItem = (name, callback) => {
     var fullPath = this.state.path + name;
     fetch("http://localhost:3000/file/meta?path=" + fullPath)
-      .then(result => result.json())
+      .then(handleServiceResponse)
       .then(stats => {
         if (stats.isDirectory) this.loadFiles(fullPath + "/");
         else callback(fullPath);
-      });
+      })
+      .catch(error => notifyMe("ERROR Getting file metadata", fullPath));
   };
 
   getItemClass = file => {
@@ -107,7 +103,8 @@ export class CodeEditor extends Component {
       .then(code => {
         this.setState({ code, path });
         onLoad(code);
-      });
+      })
+      .catch(error => notifyMe("ERROR Loading file", path));
   }
 
   render({ path, onChange, height }, { code }) {
