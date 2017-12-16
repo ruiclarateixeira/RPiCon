@@ -21,6 +21,7 @@ expressApp.get("/run", code.runPython);
 expressApp.get("/dir", files.listDirectory);
 expressApp.post("/file", files.saveFile);
 expressApp.get("/file", files.getFile);
+expressApp.get("/file/meta", files.getFileStats);
 
 var server = code.createRunServer().listen(8001);
 

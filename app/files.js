@@ -14,6 +14,16 @@ exports.getFile = (req, res) => {
   });
 };
 
+exports.getFileStats = (req, res) => {
+  if (!utils.checkParams(req, res, ["path"])) return;
+
+  fs.stat(req.query.path, (err, stats) => {
+    var fileStats = stats;
+    fileStats.isDirectory = stats.isDirectory();
+    res.send(JSON.stringify(fileStats));
+  });
+};
+
 exports.saveFile = (req, res) => {
   if (!utils.checkParams(req, res, ["path"], ["initial", "final"])) return;
 

@@ -24,16 +24,32 @@ export class FilePicker extends Component {
 
   keyUp = event => {
     if (event.keyCode == ENTER_KEY_CODE) {
+      var path = this.state.inputValue;
+      if (!path.endsWith("/")) path += "/";
+      this.setState({ path: path });
       this.loadFiles();
     }
   };
 
   handleInputChange = event => {
-    this.setState({ path: event.target.value });
+    this.setState({ inputValue: event.target.value });
   };
 
   select = file => {
     this.setState({ selected: file });
+  };
+
+  loadItem = (name, callback) => {
+    var fullPath = this.state.path + name;
+    console.log(fullPath);
+    fetch("http://localhost:3000/file/meta?path=" + fullPath)
+      .then(result => result.json())
+      .then(stats => {
+        if (stats.isDirectory) {
+          this.setState({ path: fullPath + "/" });
+          this.loadFiles();
+        } else callback(fullPath);
+      });
   };
 
   getItemClass = file => {
@@ -44,8 +60,6 @@ export class FilePicker extends Component {
   };
 
   render({ onLoadFile }, { path, files }) {
-    if (!path.endsWith("/")) path += "/";
-
     return (
       <ul class="list-group">
         <li class="list-group-header">
@@ -63,7 +77,7 @@ export class FilePicker extends Component {
           <li
             class=""
             onDblClick={() => {
-              onLoadFile(path + file);
+              this.loadItem(file, onLoadFile);
             }}
             onClick={() => this.select(file)}
             className={this.getItemClass(file)}
