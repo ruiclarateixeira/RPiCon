@@ -1,9 +1,10 @@
 const ws = require("nodejs-websocket");
 const path = require("path");
-const { spawn } = require("child_process");
+const { spawn } = require("pty.js");
 const utils = require("./utils.js");
 
 var scriptsToRun = {};
+var processes = {};
 var index = 0;
 
 exports.createRunServer = () => {
@@ -14,7 +15,6 @@ exports.createRunServer = () => {
         var scriptPath = scriptsToRun[token].path;
         var env = Object.create(process.env);
 
-        console.log(__dirname);
         if (env.PYTHONPATH == null)
           env.PYTHONPATH = __dirname + "/../pyimports";
         else env.PYTHONPATH += ":" + __dirname + "/../pyimports";
@@ -25,25 +25,28 @@ exports.createRunServer = () => {
           cwd: path.dirname(scriptPath)
         });
 
-        pyProcess.stdout.setEncoding("utf8");
-        pyProcess.stdout.on("data", function(data) {
+        pyProcess.on("data", function(data) {
+          console.log("Data");
           conn.send(data);
         });
 
-        pyProcess.stdout.on("end", function(data) {
+        pyProcess.on("end", function(data) {
           console.log("Token " + token + ": closing connection.");
           conn.close();
         });
 
-        pyProcess.stderr.setEncoding("utf8");
-        pyProcess.stderr.on("data", function(data) {
-          conn.send(data);
-        });
+        processes[token] = pyProcess;
       }
     });
 
     conn.on("close", function(code, reason) {});
   });
+};
+
+exports.stopPython = (req, res) => {
+  if (!utils.checkParams(req, res, ["token"])) return;
+
+  processes[req.query.token].kill();
 };
 
 exports.runPython = (req, res) => {
