@@ -34,6 +34,7 @@ app.on("ready", function() {
 module.exports = {
   runPython: code.runPython,
   runProcessForToken: code.runProcessForToken,
+  stopProcessForToken: code.stopProcessForToken,
   getFile: files.getFile,
   getFileStats: files.getFileStats,
   saveFile: files.saveFile,

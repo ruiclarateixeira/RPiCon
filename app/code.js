@@ -35,7 +35,7 @@ function runProcessForToken(token, onData, onEnd) {
  * Kills a running process
  * @param {*String} token Token that identifies the process within the app
  */
-function stopPython(token) {
+function stopProcessForToken(token) {
   processes[token].kill();
 }
 
@@ -51,7 +51,7 @@ function runPython(path) {
 }
 
 module.exports = {
-  stopPython,
+  stopProcessForToken,
   runPython,
   runProcessForToken
 };

@@ -8,7 +8,20 @@ const mainProcess = remote.require("./app.js");
 const HEADER_HEIGHT = 61;
 
 class AppHeader extends Component {
-  render({ onSave, onRun }, state) {
+  render({ onSave, onRun, onStop, running }, state) {
+    if (running)
+      var button = (
+        <Button class="btn btn-large" onClick={onStop}>
+          <span class="icon icon-stop" />&nbsp;Stop
+        </Button>
+      );
+    else
+      var button = (
+        <Button class="btn btn-large" onClick={onRun}>
+          <span class="icon icon-play" />&nbsp;Run
+        </Button>
+      );
+
     return (
       <Header>
         <Title>RPi Con</Title>
@@ -17,9 +30,7 @@ class AppHeader extends Component {
             <Button class="btn btn-large" onClick={onSave}>
               <span class="icon icon-floppy" />&nbsp;Save
             </Button>
-            <Button class="btn btn-large" onClick={onRun}>
-              <span class="icon icon-play" />&nbsp;Run
-            </Button>
+            {button}
           </div>
         </div>
       </Header>
@@ -35,7 +46,8 @@ class RPiCon extends Component {
       initialCode: "",
       currentCode: "",
       width: 0,
-      height: 0
+      height: 0,
+      running: false
     };
   }
 
@@ -70,13 +82,22 @@ class RPiCon extends Component {
       );
   };
 
-  render(props, { filePath, height }) {
+  render(props, { filePath, height, running }) {
+    console.log(running);
     var codeHeight = height * 0.7;
     return (
       <div class="window">
         <AppHeader
           onSave={this.saveFile}
-          onRun={() => this.termout.run(filePath)}
+          onRun={() =>
+            this.termout.run(
+              filePath,
+              token => this.setState({ token, running: true }),
+              () => this.setState({ token: null, running: false })
+            )
+          }
+          onStop={() => this.termout.stop(this.state.token)}
+          running={running}
         />
         <div class="window-content">
           <div class="pane-group">

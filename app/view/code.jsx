@@ -138,18 +138,15 @@ export class TerminalOutput extends Component {
     this.setState({ content: current + data });
   };
 
-  endOfProcess = data => {
-    this.setState({ path: null });
-  };
-
-  run = path => {
+  run = (path, onStart, onStop) => {
     this.setState({ path: path, content: null });
     var token = mainProcess.runPython(path);
-    mainProcess.runProcessForToken(
-      token,
-      this.appendContent,
-      this.endOfProcess
-    );
+    mainProcess.runProcessForToken(token, this.appendContent, onStop);
+    onStart(token);
+  };
+
+  stop = token => {
+    mainProcess.stopProcessForToken(token);
   };
 
   render({ height }, { content }) {
