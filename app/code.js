@@ -1,4 +1,3 @@
-const ws = require("nodejs-websocket");
 const path = require("path");
 const { spawn } = require("pty.js");
 
