@@ -1,6 +1,6 @@
 import { h, textarea, div, render, Component } from "preact";
 import { Header, Title, Button, ButtonGroup, NavGroup } from "preact-photon";
-import { CodeEditor, FilePicker } from "./code.jsx";
+import { CodeEditor, FilePicker, TerminalOutput } from "./code.jsx";
 import { notifyMe } from "./utils.js";
 import { run } from "./code.js";
 const { remote } = require("electron");
@@ -32,9 +32,9 @@ class RPiCon extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      path: "",
+      filePath: "",
       initialCode: "",
-      code: "",
+      currentCode: "",
       width: 0,
       height: 0
     };
@@ -58,39 +58,47 @@ class RPiCon extends Component {
 
   saveFile = () => {
     mainProcess
-      .saveFile(this.state.path, this.state.initialCode, this.state.code)
-      .then(responseJson => this.setState({ initialCode: this.state.code }))
+      .saveFile(
+        this.state.filePath,
+        this.state.initialCode,
+        this.state.currentCode
+      )
+      .then(responseJson =>
+        this.setState({ initialCode: this.state.currentCode })
+      )
       .catch(error =>
-        notifyMe("ERROR Saving File", this.state.path + ": " + error)
+        notifyMe("ERROR Saving File", this.state.filePath + ": " + error)
       );
   };
 
-  render(props, { path, height }) {
+  render(props, { filePath, height }) {
     var codeHeight = height * 0.7;
     return (
       <div class="window">
-        <AppHeader onSave={this.saveFile} onRun={() => run(path)} />
+        <AppHeader
+          onSave={this.saveFile}
+          onRun={() => this.termout.run(filePath)}
+        />
         <div class="window-content">
           <div class="pane-group">
             <div class="pane pane-sm sidebar">
-              <FilePicker onLoadFile={path => this.setState({ path: path })} />
+              <FilePicker
+                onLoadFile={filePath => this.setState({ filePath })}
+              />
             </div>
             <div class="pane">
               <CodeEditor
-                path={path}
-                onChange={code => this.setState({ code })}
+                path={filePath}
+                onChange={currentCode => this.setState({ currentCode })}
                 onLoad={initialCode =>
-                  this.setState({ initialCode, code: initialCode })
+                  this.setState({ initialCode, currentCode: initialCode })
                 }
                 height={codeHeight.toString()}
               />
-              <p
-                id="termout-title"
-                style={{ height: height * 0.04, marginTop: height * 0.01 }}
-              >
-                Console Output
-              </p>
-              <div id="termout" style={{ height: height * 0.25 }} />
+              <TerminalOutput
+                height={height * 0.3}
+                ref={instance => (this.termout = instance)}
+              />
             </div>
           </div>
         </div>

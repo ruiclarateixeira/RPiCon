@@ -7,41 +7,28 @@ var processes = {};
 var index = 0;
 
 /**
- * Create a server that will run python code and handle the stdio
+ * Run python code
+ * @param {*String} token Token that identifies the process within the app
+ * @param {*Function} onData Handle data from stdio
+ * @param {*Function} onEnd Handle end event
  */
-function createRunServer() {
-  return ws.createServer(function(conn) {
-    conn.on("text", function(str) {
-      if (str.startsWith("RUN ")) {
-        var token = str.substring(4, str.length);
-        var scriptPath = scriptsToRun[token].path;
-        var env = Object.create(process.env);
+function runProcessForToken(token, onData, onEnd) {
+  var scriptPath = scriptsToRun[token].path;
+  var env = Object.create(process.env);
 
-        if (env.PYTHONPATH == null)
-          env.PYTHONPATH = __dirname + "/../pyimports";
-        else env.PYTHONPATH += ":" + __dirname + "/../pyimports";
+  if (env.PYTHONPATH == null) env.PYTHONPATH = __dirname + "/../pyimports";
+  else env.PYTHONPATH += ":" + __dirname + "/../pyimports";
 
-        console.log("Running code for token " + token + ": " + scriptPath);
-        var pyProcess = spawn("python", [scriptPath], {
-          env: env,
-          cwd: path.dirname(scriptPath)
-        });
-
-        pyProcess.on("data", function(data) {
-          conn.send(data);
-        });
-
-        pyProcess.on("end", function(data) {
-          console.log("Token " + token + ": closing connection.");
-          conn.close();
-        });
-
-        processes[token] = pyProcess;
-      }
-    });
-
-    conn.on("close", function(code, reason) {});
+  console.log("Running code for token " + token + ": " + scriptPath);
+  var pyProcess = spawn("python", [scriptPath], {
+    env: env,
+    cwd: path.dirname(scriptPath)
   });
+
+  pyProcess.on("data", onData);
+  pyProcess.on("end", onEnd);
+
+  processes[token] = pyProcess;
 }
 
 /**
@@ -64,7 +51,7 @@ function runPython(path) {
 }
 
 module.exports = {
-  createRunServer,
   stopPython,
-  runPython
+  runPython,
+  runProcessForToken
 };

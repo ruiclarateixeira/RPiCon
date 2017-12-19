@@ -131,3 +131,40 @@ export class CodeEditor extends Component {
     );
   }
 }
+
+export class TerminalOutput extends Component {
+  appendContent = data => {
+    var current = this.state.content == null ? "" : this.state.content;
+    this.setState({ content: current + data });
+  };
+
+  endOfProcess = data => {
+    this.setState({ path: null });
+  };
+
+  run = path => {
+    this.setState({ path: path, content: null });
+    var token = mainProcess.runPython(path);
+    mainProcess.runProcessForToken(
+      token,
+      this.appendContent,
+      this.endOfProcess
+    );
+  };
+
+  render({ height }, { content }) {
+    return (
+      <div>
+        <p
+          id="termout-title"
+          style={{ height: height * 0.15, marginTop: height * 0.05 }}
+        >
+          Console Output
+        </p>
+        <div id="termout" style={{ height: height * 0.8 }}>
+          <pre style={{ margin: 0 }}>{content}</pre>
+        </div>
+      </div>
+    );
+  }
+}

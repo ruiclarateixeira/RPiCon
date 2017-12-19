@@ -2,8 +2,6 @@ const { app, BrowserWindow } = require("electron");
 const files = require("./files.js");
 const code = require("./code.js");
 
-var server = code.createRunServer().listen(8001);
-
 var mainWindow = null;
 
 // Quit when all windows are closed.
@@ -35,6 +33,7 @@ app.on("ready", function() {
 // Exposed to the view layer
 module.exports = {
   runPython: code.runPython,
+  runProcessForToken: code.runProcessForToken,
   getFile: files.getFile,
   getFileStats: files.getFileStats,
   saveFile: files.saveFile,
