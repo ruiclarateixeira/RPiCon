@@ -3,6 +3,8 @@ import { Header, Title, Button, ButtonGroup, NavGroup } from "preact-photon";
 import { CodeEditor, FilePicker } from "./code.jsx";
 import { notifyMe, handleServiceResponse } from "./utils.js";
 import { run } from "./code.js";
+const { remote } = require("electron");
+const mainProcess = remote.require("./app.js");
 
 const HEADER_HEIGHT = 61;
 
@@ -39,22 +41,12 @@ class RPiCon extends Component {
   };
 
   saveFile = () => {
-    var payload = {
-      initial: this.state.initialCode,
-      final: this.state.code
-    };
-
-    fetch("http://localhost:3000/file?path=" + this.state.path, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json; charset=utf-8"
-      }
-    })
-      .then(handleServiceResponse)
+    mainProcess
+      .saveFile(this.state.path, this.state.initialCode, this.state.code)
       .then(responseJson => this.setState({ initialCode: this.state.code }))
-      .catch(error => notifyMe("ERROR Saving File", this.state.path));
+      .catch(error =>
+        notifyMe("ERROR Saving File", this.state.path + ": " + error)
+      );
   };
 
   render(props, { path, height }) {

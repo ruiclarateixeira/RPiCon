@@ -13,7 +13,6 @@
   "author": "Rui Teixeira",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.2",
     "nodejs-websocket": "^1.7.1",
     "opn": "^5.1.0",
     "preact": "^8.2.7",

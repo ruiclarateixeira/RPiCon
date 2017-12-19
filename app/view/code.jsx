@@ -3,6 +3,8 @@ import AceEditor from "react-ace";
 import "brace/mode/python";
 import "brace/theme/github";
 import { notifyMe, handleServiceResponse } from "./utils.js";
+const { remote } = require("electron");
+const mainProcess = remote.require("./app.js");
 
 const ENTER_KEY_CODE = 13;
 
@@ -18,10 +20,10 @@ export class FilePicker extends Component {
   }
 
   loadFiles = path => {
-    fetch("http://localhost:3000/dir?path=" + path)
-      .then(handleServiceResponse)
+    mainProcess
+      .listDirectory(path)
       .then(files => this.setState({ files, path, inputValue: path }))
-      .catch(error => notifyMe("ERROR Loading File", path));
+      .catch(error => notifyMe("ERROR Loading File ", path + ": " + error));
   };
 
   keyUp = event => {
@@ -42,13 +44,15 @@ export class FilePicker extends Component {
 
   loadItem = (name, callback) => {
     var fullPath = this.state.path + name;
-    fetch("http://localhost:3000/file/meta?path=" + fullPath)
-      .then(handleServiceResponse)
+    mainProcess
+      .getFileStats(fullPath)
       .then(stats => {
         if (stats.isDirectory) this.loadFiles(fullPath + "/");
         else callback(fullPath);
       })
-      .catch(error => notifyMe("ERROR Getting file metadata", fullPath));
+      .catch(error =>
+        notifyMe("ERROR Getting file metadata", fullPath + ": " + error)
+      );
   };
 
   getItemClass = file => {
@@ -98,13 +102,13 @@ export class CodeEditor extends Component {
   componentWillReceiveProps({ path, onLoad }, { code }) {
     if (path == this.state.path) return;
 
-    fetch("http://localhost:3000/file?path=" + path)
-      .then(result => result.text())
+    mainProcess
+      .getFile(path)
       .then(code => {
         this.setState({ code, path });
         onLoad(code);
       })
-      .catch(error => notifyMe("ERROR Loading file", path));
+      .catch(error => notifyMe("ERROR Loading file", path + ": " + error));
   }
 
   render({ path, onChange, height }, { code }) {
