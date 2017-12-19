@@ -1,8 +1,8 @@
-function handleServiceResponse(response) {
-  if (response.ok) return response.json();
-  throw Error(response.statusText);
-}
-
+/**
+ * Display a desktop notification
+ * @param {*String} tag Title of the notification
+ * @param {*String} body Body of the notification
+ */
 function notifyMe(tag, body) {
   if (!("Notification" in window)) {
     alert("This browser does not support desktop notification");
@@ -17,4 +17,4 @@ function notifyMe(tag, body) {
   }
 }
 
-module.exports = { notifyMe, handleServiceResponse };
+module.exports = { notifyMe };

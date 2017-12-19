@@ -2,7 +2,7 @@ import { h, Component } from "preact";
 import AceEditor from "react-ace";
 import "brace/mode/python";
 import "brace/theme/github";
-import { notifyMe, handleServiceResponse } from "./utils.js";
+import { notifyMe } from "./utils.js";
 const { remote } = require("electron");
 const mainProcess = remote.require("./app.js");
 

@@ -1,6 +1,10 @@
-var utils = require("./utils.js");
 var fs = require("fs");
 
+/**
+ * Gets the content of a file from disk
+ * @param {*String} path  Full absolute path to file
+ * @returns {*Promise} If fulfilled returns content of the file as utf-8 string else an error mssage
+ */
 exports.getFile = path => {
   return new Promise((resolve, reject) => {
     fs.readFile(path, "utf8", function read(err, data) {
@@ -12,6 +16,11 @@ exports.getFile = path => {
   });
 };
 
+/**
+ * Gets the stats of the file from disk
+ * @param {*String} path Full absolute path to file
+ * @returns {*Promise} If fulfilled returns an object with file stats else an error message
+ */
 exports.getFileStats = path => {
   return new Promise((resolve, reject) => {
     fs.stat(path, (err, stats) => {
@@ -22,6 +31,13 @@ exports.getFileStats = path => {
   });
 };
 
+/**
+ * Saves a file to disk
+ * @param {*String} path Full absolute path to file
+ * @param {*String} initial Expected current content of file on disk - save will fail if that's not the case
+ * @param {*String} final Content to save to disk for given file
+ * @returns {*Promise} If fulfilled will return success message else error message
+ */
 exports.saveFile = (path, initial, final) => {
   return new Promise((resolve, reject) => {
     fs.readFile(path, function read(err, data) {
@@ -46,6 +62,11 @@ exports.saveFile = (path, initial, final) => {
   });
 };
 
+/**
+ * Lists files in directory
+ * @param {*String} path Full path to directory
+ * @returns {*Promise} If fullfilled will return array of strings with file names else an error message
+ */
 exports.listDirectory = path => {
   return new Promise((resolve, reject) => {
     fs.readdir(path, function(err, items) {

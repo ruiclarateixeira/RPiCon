@@ -1,14 +1,9 @@
-// {app}            Module to control application life.
-// {BrowserWindow}  Module to create native browser window.
 const { app, BrowserWindow } = require("electron");
 const files = require("./files.js");
 const code = require("./code.js");
 
 var server = code.createRunServer().listen(8001);
 
-/**
- * Electron
- */
 var mainWindow = null;
 
 // Quit when all windows are closed.
@@ -37,6 +32,7 @@ app.on("ready", function() {
   });
 });
 
+// Exposed to the view layer
 module.exports = {
   runPython: code.runPython,
   getFile: files.getFile,

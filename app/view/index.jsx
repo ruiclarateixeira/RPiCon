@@ -1,7 +1,7 @@
 import { h, textarea, div, render, Component } from "preact";
 import { Header, Title, Button, ButtonGroup, NavGroup } from "preact-photon";
 import { CodeEditor, FilePicker } from "./code.jsx";
-import { notifyMe, handleServiceResponse } from "./utils.js";
+import { notifyMe } from "./utils.js";
 import { run } from "./code.js";
 const { remote } = require("electron");
 const mainProcess = remote.require("./app.js");

@@ -1,12 +1,14 @@
 const ws = require("nodejs-websocket");
 const path = require("path");
 const { spawn } = require("pty.js");
-const utils = require("./utils.js");
 
 var scriptsToRun = {};
 var processes = {};
 var index = 0;
 
+/**
+ * Create a server that will run python code and handle the stdio
+ */
 function createRunServer() {
   return ws.createServer(function(conn) {
     conn.on("text", function(str) {
@@ -42,10 +44,18 @@ function createRunServer() {
   });
 }
 
+/**
+ * Kills a running process
+ * @param {*String} token Token that identifies the process within the app
+ */
 function stopPython(token) {
   processes[token].kill();
 }
 
+/**
+ * Marks a file to be ran. Actually running the process requires connecting to the run server.
+ * @param {*String} path Full absolute path to file
+ */
 function runPython(path) {
   scriptsToRun[index] = {
     path: path
