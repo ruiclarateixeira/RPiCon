@@ -19,6 +19,7 @@ function runProcessForToken(token, onData, onEnd) {
   else env.PYTHONPATH += ":" + __dirname + "/../pyimports";
 
   console.log("Running code for token " + token + ": " + scriptPath);
+  onData("$ python " + scriptPath + "\n\n");
   var pyProcess = spawn("python", [scriptPath], {
     env: env,
     cwd: path.dirname(scriptPath)

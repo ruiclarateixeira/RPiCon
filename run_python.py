@@ -1,14 +1,14 @@
 """ A sample python script for testing """
 import RPi.GPIO as GPIO
+import time
 
 
 def run():
     """ Run """
-    print "Running some python like a boss"
-    print "Updating python files like a boss & then running them"
-    print "Updating files with a proper code editor"
-    print "Updating files from a preact component"
-    GPIO.print_test()
+    print "R"
+    for i in range(0, 100):
+        print str(i) + " Kujus"
+        time.sleep(1)
 
 
 run()
