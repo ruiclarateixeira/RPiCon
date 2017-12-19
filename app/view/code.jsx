@@ -8,6 +8,9 @@ const mainProcess = remote.require("./app.js");
 
 const ENTER_KEY_CODE = 13;
 
+/**
+ * FilePicker - Browse files on disk
+ */
 export class FilePicker extends Component {
   constructor(props) {
     super(props);
@@ -34,13 +37,8 @@ export class FilePicker extends Component {
     }
   };
 
-  handleInputChange = event => {
+  handleInputChange = event =>
     this.setState({ inputValue: event.target.value });
-  };
-
-  select = file => {
-    this.setState({ selected: file });
-  };
 
   loadItem = (name, callback) => {
     var fullPath = this.state.path + name;
@@ -79,10 +77,8 @@ export class FilePicker extends Component {
         {files.map(file => (
           <li
             class=""
-            onDblClick={() => {
-              this.loadItem(file, onLoadFile);
-            }}
-            onClick={() => this.select(file)}
+            onDblClick={() => this.loadItem(file, onLoadFile)}
+            onClick={() => this.setState({ selected: file })}
             className={this.getItemClass(file)}
           >
             {file}
@@ -93,6 +89,9 @@ export class FilePicker extends Component {
   }
 }
 
+/**
+ * CodeEditor - Edit files
+ */
 export class CodeEditor extends Component {
   constructor(props) {
     super(props);

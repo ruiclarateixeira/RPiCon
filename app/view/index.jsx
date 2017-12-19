@@ -8,6 +8,26 @@ const mainProcess = remote.require("./app.js");
 
 const HEADER_HEIGHT = 61;
 
+class AppHeader extends Component {
+  render({ onSave, onRun }, state) {
+    return (
+      <Header>
+        <Title>RPi Con</Title>
+        <div class="toolbar-actions">
+          <div class="btn-group pull-right">
+            <Button class="btn btn-large" onClick={onSave}>
+              <span class="icon icon-floppy" />&nbsp;Save
+            </Button>
+            <Button class="btn btn-large" onClick={onRun}>
+              <span class="icon icon-play" />&nbsp;Run
+            </Button>
+          </div>
+        </div>
+      </Header>
+    );
+  }
+}
+
 class RPiCon extends Component {
   constructor(props) {
     super(props);
@@ -36,10 +56,6 @@ class RPiCon extends Component {
     });
   };
 
-  loadFile = path => {
-    this.setState({ path: path });
-  };
-
   saveFile = () => {
     mainProcess
       .saveFile(this.state.path, this.state.initialCode, this.state.code)
@@ -53,30 +69,18 @@ class RPiCon extends Component {
     var codeHeight = height * 0.7;
     return (
       <div class="window">
-        <Header>
-          <Title>RPi Con</Title>
-          <div class="toolbar-actions">
-            <div class="btn-group pull-right">
-              <Button class="btn btn-large" onClick={this.saveFile}>
-                <span class="icon icon-floppy" />&nbsp;Save
-              </Button>
-              <Button class="btn btn-large" onClick={() => run(path)}>
-                <span class="icon icon-play" />&nbsp;Run
-              </Button>
-            </div>
-          </div>
-        </Header>
+        <AppHeader onSave={this.saveFile} onRun={() => run(path)} />
         <div class="window-content">
           <div class="pane-group">
             <div class="pane pane-sm sidebar">
-              <FilePicker onLoadFile={this.loadFile} />
+              <FilePicker onLoadFile={path => this.setState({ path: path })} />
             </div>
             <div class="pane">
               <CodeEditor
                 path={path}
                 onChange={code => this.setState({ code })}
                 onLoad={initialCode =>
-                  this.setState({ initialCode: initialCode, code: initialCode })
+                  this.setState({ initialCode, code: initialCode })
                 }
                 height={codeHeight.toString()}
               />
