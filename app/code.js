@@ -7,7 +7,7 @@ var scriptsToRun = {};
 var processes = {};
 var index = 0;
 
-exports.createRunServer = () => {
+function createRunServer() {
   return ws.createServer(function(conn) {
     conn.on("text", function(str) {
       if (str.startsWith("RUN ")) {
@@ -26,7 +26,6 @@ exports.createRunServer = () => {
         });
 
         pyProcess.on("data", function(data) {
-          console.log("Data");
           conn.send(data);
         });
 
@@ -41,19 +40,21 @@ exports.createRunServer = () => {
 
     conn.on("close", function(code, reason) {});
   });
-};
+}
 
-exports.stopPython = (req, res) => {
-  if (!utils.checkParams(req, res, ["token"])) return;
+function stopPython(token) {
+  processes[token].kill();
+}
 
-  processes[req.query.token].kill();
-};
-
-exports.runPython = (req, res) => {
-  if (!utils.checkParams(req, res, ["path"])) return;
+function runPython(path) {
   scriptsToRun[index] = {
-    path: req.query.path
+    path: path
   };
-  res.send({ token: index });
-  index++;
+  return index++;
+}
+
+module.exports = {
+  createRunServer,
+  stopPython,
+  runPython
 };

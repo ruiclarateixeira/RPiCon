@@ -17,7 +17,6 @@ expressApp.listen(3000, function() {
 expressApp.use(express.static("public"));
 expressApp.use(bodyParser.json());
 
-expressApp.get("/run", code.runPython);
 expressApp.get("/dir", files.listDirectory);
 expressApp.post("/file", files.saveFile);
 expressApp.get("/file", files.getFile);
@@ -55,3 +54,5 @@ app.on("ready", function() {
     mainWindow = null;
   });
 });
+
+module.exports = { runPython: code.runPython };
