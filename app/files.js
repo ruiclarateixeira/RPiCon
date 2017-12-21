@@ -5,7 +5,7 @@ var fs = require("fs");
  * @param {*String} path  Full absolute path to file
  * @returns {*Promise} If fulfilled returns content of the file as utf-8 string else an error mssage
  */
-exports.getFile = path => {
+function getFile(path) {
   return new Promise((resolve, reject) => {
     fs.readFile(path, "utf8", function read(err, data) {
       if (err) {
@@ -14,14 +14,14 @@ exports.getFile = path => {
       } else resolve(data);
     });
   });
-};
+}
 
 /**
  * Gets the stats of the file from disk
  * @param {*String} path Full absolute path to file
  * @returns {*Promise} If fulfilled returns an object with file stats else an error message
  */
-exports.getFileStats = path => {
+function getFileStats(path) {
   return new Promise((resolve, reject) => {
     fs.stat(path, (err, stats) => {
       var fileStats = stats;
@@ -29,7 +29,7 @@ exports.getFileStats = path => {
       resolve(fileStats);
     });
   });
-};
+}
 
 /**
  * Saves a file to disk
@@ -38,7 +38,7 @@ exports.getFileStats = path => {
  * @param {*String} final Content to save to disk for given file
  * @returns {*Promise} If fulfilled will return success message else error message
  */
-exports.saveFile = (path, initial, final) => {
+function saveFile(path, initial, final) {
   return new Promise((resolve, reject) => {
     fs.readFile(path, function read(err, data) {
       if (err) {
@@ -60,14 +60,14 @@ exports.saveFile = (path, initial, final) => {
       });
     });
   });
-};
+}
 
 /**
  * Lists files in directory
  * @param {*String} path Full path to directory
  * @returns {*Promise} If fullfilled will return array of strings with file names else an error message
  */
-exports.listDirectory = path => {
+function listDirectory(path) {
   return new Promise((resolve, reject) => {
     fs.readdir(path, function(err, items) {
       if (err) {
@@ -76,4 +76,11 @@ exports.listDirectory = path => {
       } else resolve(items);
     });
   });
+}
+
+module.exports = {
+  getFile,
+  getFileStats,
+  saveFile,
+  listDirectory
 };

@@ -51,15 +51,24 @@ class RPiCon extends Component {
     };
   }
 
+  /**
+   * Ensure we maintain the window dimensions after resize
+   */
   componentDidMount() {
     this.updateWindowDimensions();
     window.addEventListener("resize", this.updateWindowDimensions);
   }
 
+  /**
+   * Clean up
+   */
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateWindowDimensions);
   }
 
+  /**
+   * Update state with window dimensions
+   */
   updateWindowDimensions = () => {
     this.setState({
       width: window.innerWidth,
@@ -67,6 +76,9 @@ class RPiCon extends Component {
     });
   };
 
+  /**
+   * Save currently loaded file to disk
+   */
   saveFile = () => {
     mainProcess
       .saveFile(

@@ -22,6 +22,9 @@ export class FilePicker extends Component {
     this.loadFiles("/");
   }
 
+  /**
+   * Load files from a given path and set {files, path, inputValue}
+   */
   loadFiles = path => {
     mainProcess
       .listDirectory(path)
@@ -29,6 +32,10 @@ export class FilePicker extends Component {
       .catch(error => notifyMe("ERROR Loading File ", path + ": " + error));
   };
 
+  /**
+   * Handle key press on the input
+   * Enter - load files in path
+   */
   keyUp = event => {
     if (event.keyCode == ENTER_KEY_CODE) {
       var path = this.state.inputValue;
@@ -37,9 +44,17 @@ export class FilePicker extends Component {
     }
   };
 
+  /**
+   * When input changes update {inputValue}
+   */
   handleInputChange = event =>
     this.setState({ inputValue: event.target.value });
 
+  /**
+   * Load item from file list
+   * if item is a directory it will just load the files in directory
+   * else it will callback with the full path to the item
+   */
   loadItem = (name, callback) => {
     var fullPath = this.state.path + name;
     mainProcess
@@ -53,6 +68,9 @@ export class FilePicker extends Component {
       );
   };
 
+  /**
+   * Get the class for an item in the list
+   */
   getItemClass = file => {
     var className = "list-group-item";
     if (this.state.selected == file) className += " Active";
@@ -76,7 +94,6 @@ export class FilePicker extends Component {
 
         {files.map(file => (
           <li
-            class=""
             onDblClick={() => this.loadItem(file, onLoadFile)}
             onClick={() => this.setState({ selected: file })}
             className={this.getItemClass(file)}
@@ -98,6 +115,11 @@ export class CodeEditor extends Component {
     this.state = { code: "", path: "" };
   }
 
+  /**
+   * Ensures the files get loaded when the path changes
+   * @param {*Object} props {path to file, onLoad function when the file is loaded from disk}
+   * @param {*Object} state {code in the editor}
+   */
   componentWillReceiveProps({ path, onLoad }, { code }) {
     if (path == this.state.path) return;
 
@@ -133,11 +155,22 @@ export class CodeEditor extends Component {
 }
 
 export class TerminalOutput extends Component {
+  /**
+   * Append data into the output
+   * @param {*String} data to append
+   */
   appendContent = data => {
     var current = this.state.content == null ? "" : this.state.content;
     this.setState({ content: current + data });
   };
 
+  /**
+   * Start process and callback when pocess is start
+   * NOTE: This is meant to be called from the parent
+   * @param {*String} path Full absolute path to file
+   * @param {*Function} onStart function to run when process is successfully started
+   * @param {*Function} onStop function to run when process is successfully stopped
+   */
   run = (path, onStart, onStop) => {
     this.setState({ path: path, content: null });
     var token = mainProcess.runPython(path);
@@ -145,6 +178,10 @@ export class TerminalOutput extends Component {
     onStart(token);
   };
 
+  /**
+   * Stop process
+   * @param {*String} token that uniquely identifies the process in the app
+   */
   stop = token => {
     mainProcess.stopProcessForToken(token);
   };
