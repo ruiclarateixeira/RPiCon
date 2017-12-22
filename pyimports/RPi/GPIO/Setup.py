@@ -1,6 +1,7 @@
 """ Setup Fns """
 import json
 from RPi.GPIO.TCPHandler import TCPHandler
+from RPi.GPIO.Layouts import BOARD_LAYOUT
 
 # State
 PINS = {}
@@ -20,19 +21,21 @@ HANDLER = TCPHandler('', 3001)
 def cleanup():
     """ Clean up any existing pin setup """
     PINS.clear()
-    sendupdate()
 
 
 def setmode(mode):
     """ Set board mode """
     print "[GPIODEBUG] MODE " + str(mode)
-    sendupdate()
+
+    if mode == BOARD:
+        PINS.update(BOARD_LAYOUT)
+        sendupdate()
+    else:
+        raise Exception("Mode {} is not supported".format(mode))
 
 
 def setup(channel, direction):
-    PINS[channel] = {
-        "direction": direction
-    }
+    PINS[str(channel)]["direction"] = direction
     sendupdate()
 
 

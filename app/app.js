@@ -1,7 +1,7 @@
 const { app, BrowserWindow } = require("electron");
 const files = require("./files.js");
 const code = require("./code.js");
-
+const gpio = require("./gpio.js");
 var mainWindow = null;
 
 // Quit when all windows are closed.
@@ -38,5 +38,6 @@ module.exports = {
   getFile: files.getFile,
   getFileStats: files.getFileStats,
   saveFile: files.saveFile,
-  listDirectory: files.listDirectory
+  listDirectory: files.listDirectory,
+  connectToDebugSocket: gpio.connectToDebugSocket
 };

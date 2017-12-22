@@ -1,6 +1,7 @@
 import { h, textarea, div, render, Component } from "preact";
 import { Header, Title, Button, ButtonGroup, NavGroup } from "preact-photon";
 import { CodeEditor, FilePicker, TerminalOutput } from "./code.jsx";
+import { GPIODebug } from "./gpio.jsx";
 import { notifyMe } from "./utils.js";
 const { remote } = require("electron");
 const mainProcess = remote.require("./app.js");
@@ -95,7 +96,6 @@ class RPiCon extends Component {
   };
 
   render(props, { filePath, height, running }) {
-    console.log(running);
     var codeHeight = height * 0.7;
     return (
       <div class="window">
@@ -131,6 +131,9 @@ class RPiCon extends Component {
                 height={height * 0.3}
                 ref={instance => (this.termout = instance)}
               />
+            </div>
+            <div class="pane pane-sm sidebar">
+              <GPIODebug run={running} />
             </div>
           </div>
         </div>

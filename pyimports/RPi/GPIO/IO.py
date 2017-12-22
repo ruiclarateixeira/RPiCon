@@ -6,5 +6,5 @@ HIGH = 2
 
 
 def output(channel, output):
-    getpins()[channel]['output'] = output
+    getpins()[str(channel)]['output'] = output
     sendupdate()
