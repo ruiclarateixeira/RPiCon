@@ -20,7 +20,13 @@ export class GPIODebug extends Component {
   componentWillReceiveProps({ run }, { currentlyRunning }) {
     if (run && !currentlyRunning) {
       mainProcess.connectToDebugSocket(data => {
-        console.log(data);
+        var splits = data.split("\n").filter(item => item.length > 0);
+        for (var splitIx in splits) {
+          var split = JSON.parse(splits[splitIx]);
+          var rows = [];
+          for (var index in split) rows.push(split[index]);
+          this.setState({ rows });
+        }
       });
     }
 
@@ -28,6 +34,10 @@ export class GPIODebug extends Component {
   }
 
   render(props, { rows }) {
-    return <div class="table">{rows}</div>;
+    var contents = [];
+    rows.forEach(element => {
+      contents.push(<div class="pin">{element.name}</div>);
+    });
+    return <div class="table">{contents}</div>;
   }
 }
