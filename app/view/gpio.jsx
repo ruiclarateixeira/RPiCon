@@ -2,6 +2,31 @@ import { h, div, Component } from "preact";
 const { remote } = require("electron");
 const mainProcess = remote.require("./app.js");
 
+class GPIOPin extends Component {
+  directionFromEnum(e) {
+    switch (e) {
+      case 1:
+        return "I";
+      case 2:
+        return "I";
+      default:
+        throw "Unexpected direction";
+    }
+  }
+
+  render({ index, pin }, state) {
+    var pinClass = index % 2 == 0 ? "pin-left" : "pin-right";
+    var pinHead =
+      pin.direction == null ? "" : this.directionFromEnum(pin.direction);
+    return (
+      <div class={"pin " + pinClass}>
+        <div class="pin-name">{pin.name}</div>
+        <div class="pin-dig">{pinHead}</div>
+      </div>
+    );
+  }
+}
+
 /**
  * Interactive GPIO Debug
  */
@@ -36,8 +61,8 @@ export class GPIODebug extends Component {
   render(props, { rows }) {
     var contents = [];
     rows.forEach(element => {
-      contents.push(<div class="pin">{element.name}</div>);
+      contents.push(<GPIOPin index={contents.length} pin={element} />);
     });
-    return <div class="table">{contents}</div>;
+    return <div class="pins">{contents}</div>;
   }
 }

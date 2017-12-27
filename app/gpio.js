@@ -23,6 +23,10 @@ function connectToDebugSocket(callback) {
     client.on("data", data => callback(String(data)));
 
     client.on("error", err => connectToDebugSocket(callback));
+
+    client.on("end", () => {
+      client.destroy();
+    });
   });
 }
 

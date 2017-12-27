@@ -14,3 +14,47 @@
   margin: 0;
   vertical-align: bottom;
 }
+
+.pins {
+  display: block;
+  width: 100%;
+}
+
+.pin {
+  display: block;
+  width: 45%;
+  margin: 2.5%;
+}
+
+.pin-left {
+  float: left;
+}
+
+.pin-right {
+  float: right;
+}
+
+.pin-dig {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px black solid;
+  text-align: center;
+}
+
+.pin-left .pin-dig {
+  float: right;
+}
+
+.pin-left .pin-name {
+  float: left;
+}
+
+.pin-right .pin-dig {
+  float: left;
+}
+
+.pin-right .pin-name {
+  float: right;
+}
