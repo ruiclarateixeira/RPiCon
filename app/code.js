@@ -26,7 +26,16 @@ function runProcessForToken(token, onData, onEnd) {
   });
 
   pyProcess.on("data", onData);
-  pyProcess.on("end", onEnd);
+
+  pyProcess.on("end", data => {
+    console.log("Ending code for token: " + token);
+    onEnd();
+  });
+
+  pyProcess.on("exit", data => {
+    console.log("Exiting code for token: " + token);
+    onEnd();
+  });
 
   processes[token] = pyProcess;
 }
