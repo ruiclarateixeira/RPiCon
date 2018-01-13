@@ -1,5 +1,5 @@
 const path = require("path");
-const { spawn } = require("pty.js");
+const { spawn } = require("node-pty");
 
 var scriptsToRun = {};
 var processes = {};
@@ -26,11 +26,6 @@ function runProcessForToken(token, onData, onEnd) {
   });
 
   pyProcess.on("data", onData);
-
-  pyProcess.on("end", data => {
-    console.log("Ending code for token: " + token);
-    onEnd();
-  });
 
   pyProcess.on("exit", data => {
     console.log("Exiting code for token: " + token);
