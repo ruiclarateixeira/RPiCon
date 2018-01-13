@@ -39,5 +39,9 @@ module.exports = {
   getFileStats: files.getFileStats,
   saveFile: files.saveFile,
   listDirectory: files.listDirectory,
-  connectToDebugSocket: gpio.connectToDebugSocket
+  connectToDebugSocket: gpio.connectToDebugSocket,
+  getArgv: index => {
+    if (index == null) return process.argv;
+    return process.argv[index];
+  }
 };

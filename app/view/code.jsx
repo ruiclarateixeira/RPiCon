@@ -15,11 +15,12 @@ export class FilePicker extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inputValue: "/",
+      inputValue: mainProcess.getArgv(2) == null ? "/" : mainProcess.getArgv(2),
       files: [],
       selected: ""
     };
-    this.loadFiles("/");
+
+    this.loadFiles(this.state.inputValue);
   }
 
   /**
