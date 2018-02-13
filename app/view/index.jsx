@@ -50,7 +50,6 @@ class RPiCon extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filePath: "",
       initialCode: "",
       currentCode: "",
       width: 0,
@@ -87,31 +86,24 @@ class RPiCon extends Component {
   /**
    * Save currently loaded file to disk
    */
-  saveFile = () => {
+  saveFile = fileName => {
     mainProcess
-      .saveFile(
-        this.state.filePath,
-        this.state.initialCode,
-        this.state.currentCode
-      )
+      .saveFile(fileName, this.state.initialCode, this.state.currentCode)
       .then(responseJson =>
         this.setState({ initialCode: this.state.currentCode })
       )
-      .catch(error =>
-        notifyMe("ERROR Saving File", this.state.filePath + ": " + error)
-      );
+      .catch(error => notifyMe("ERROR Saving File", fileName + ": " + error));
   };
 
-  render(props, { filePath, height, running }) {
-    console.log(props);
+  render({ dispatch, openFiles }, { height, running }) {
     var codeHeight = height * 0.7;
     return (
       <div class="window">
         <AppHeader
-          onSave={this.saveFile}
+          onSave={() => this.saveFile(openFiles[0])}
           onRun={() =>
             this.termout.run(
-              filePath,
+              openFiles[0],
               token => this.setState({ token, running: true }),
               () => this.setState({ token: null, running: false })
             )
@@ -123,12 +115,12 @@ class RPiCon extends Component {
           <div class="pane-group">
             <div class="pane pane-sm sidebar">
               <FilePicker
-                onLoadFile={filePath => props.dispatch(openFile(filePath))}
+                onLoadFile={fileName => dispatch(openFile(fileName))}
               />
             </div>
             <div class="pane">
               <CodeEditor
-                path={props.openFiles[0] ? props.openFiles[0] : ""}
+                path={openFiles[0] ? openFiles[0] : ""}
                 onChange={currentCode => this.setState({ currentCode })}
                 onLoad={initialCode =>
                   this.setState({ initialCode, currentCode: initialCode })
