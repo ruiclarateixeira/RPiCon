@@ -1,8 +1,11 @@
 import { h, textarea, div, render, Component } from "preact";
+import { Provider, connect } from "preact-redux";
 import { Header, Title, Button, ButtonGroup, NavGroup } from "preact-photon";
 import { CodeEditor, FilePicker, TerminalOutput } from "./code.jsx";
 import { GPIODebug } from "./gpio.jsx";
 import { notifyMe } from "./utils.js";
+import { openFile } from "./actions.jsx";
+import store from "./store.jsx";
 const { remote } = require("electron");
 const mainProcess = remote.require("./app.js");
 
@@ -39,6 +42,10 @@ class AppHeader extends Component {
   }
 }
 
+/**
+ * Connect (store => props, )
+ */
+@connect(store => store)
 class RPiCon extends Component {
   constructor(props) {
     super(props);
@@ -96,6 +103,7 @@ class RPiCon extends Component {
   };
 
   render(props, { filePath, height, running }) {
+    console.log(props);
     var codeHeight = height * 0.7;
     return (
       <div class="window">
@@ -115,12 +123,12 @@ class RPiCon extends Component {
           <div class="pane-group">
             <div class="pane pane-sm sidebar">
               <FilePicker
-                onLoadFile={filePath => this.setState({ filePath })}
+                onLoadFile={filePath => props.dispatch(openFile(filePath))}
               />
             </div>
             <div class="pane">
               <CodeEditor
-                path={filePath}
+                path={props.openFiles[0] ? props.openFiles[0] : ""}
                 onChange={currentCode => this.setState({ currentCode })}
                 onLoad={initialCode =>
                   this.setState({ initialCode, currentCode: initialCode })
@@ -142,4 +150,10 @@ class RPiCon extends Component {
   }
 }
 
-render(<RPiCon />, document.body);
+let view = (
+  <Provider store={store}>
+    <RPiCon />
+  </Provider>
+);
+
+render(view, document.body);
