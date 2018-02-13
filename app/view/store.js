@@ -1,5 +1,5 @@
 import { applyMiddleware, createStore } from "redux";
-import reducers from "./reducers.jsx";
+import reducers from "./reducers";
 
 const logger = store => next => action => {
   console.log("Action fired!");

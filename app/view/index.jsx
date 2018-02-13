@@ -3,9 +3,9 @@ import { Provider, connect } from "preact-redux";
 import { Header, Title, Button, ButtonGroup, NavGroup } from "preact-photon";
 import { CodeEditor, FilePicker, TerminalOutput } from "./code.jsx";
 import { GPIODebug } from "./gpio.jsx";
-import { notifyMe } from "./utils.js";
-import { openFile } from "./actions.jsx";
-import store from "./store.jsx";
+import { notifyMe } from "./utils";
+import { openFile } from "./actions";
+import store from "./store";
 const { remote } = require("electron");
 const mainProcess = remote.require("./app.js");
 

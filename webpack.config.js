@@ -10,11 +10,15 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.jsx$/,
+        test: /\.jsx|\.js$/,
         exclude: /node_modules/,
         loader: "babel-loader",
         query: {
-          plugins: ["transform-decorators-legacy"]
+          plugins: [
+            "transform-decorators-legacy",
+            "transform-class-properties"
+          ],
+          presets: ["env"]
         }
       }
     ]
