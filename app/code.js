@@ -13,7 +13,7 @@ var index = 0;
  */
 function runProcessForToken(token, onData, onEnd) {
   var scriptPath = scriptsToRun[token].path;
-  var env = Object.create(process.env);
+  var env = Object.assign({}, process.env);
 
   if (env.PYTHONPATH == null) env.PYTHONPATH = __dirname + "/../pyimports";
   else env.PYTHONPATH += ":" + __dirname + "/../pyimports";
