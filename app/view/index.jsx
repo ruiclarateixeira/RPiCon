@@ -4,7 +4,6 @@ import { Header, Title, Button, ButtonGroup, NavGroup } from "preact-photon";
 import { CodeEditor, FilePicker, TerminalOutput } from "./code.jsx";
 import { GPIODebug } from "./gpio.jsx";
 import { notifyMe } from "./utils";
-import { openFile } from "./actions";
 import store from "./store";
 const { remote } = require("electron");
 const mainProcess = remote.require("./app.js");
@@ -114,13 +113,10 @@ class RPiCon extends Component {
         <div class="window-content">
           <div class="pane-group">
             <div class="pane pane-sm sidebar">
-              <FilePicker
-                onLoadFile={fileName => dispatch(openFile(fileName))}
-              />
+              <FilePicker />
             </div>
             <div class="pane">
               <CodeEditor
-                path={openFiles[0] ? openFiles[0] : ""}
                 onChange={currentCode => this.setState({ currentCode })}
                 onLoad={initialCode =>
                   this.setState({ initialCode, currentCode: initialCode })

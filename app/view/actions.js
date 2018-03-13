@@ -4,3 +4,10 @@ export function openFile(fileName) {
     fileName
   };
 }
+
+export function closeFile(fileName) {
+  return {
+    type: "CLOSE_FILE",
+    fileName
+  };
+}

@@ -1,8 +1,11 @@
 import { h, Component } from "preact";
+import { TabGroup, Tab, Icon } from "preact-photon";
+import { Provider, connect } from "preact-redux";
 import AceEditor from "react-ace";
 import "brace/mode/python";
 import "brace/theme/github";
 import { notifyMe } from "./utils";
+import { openFile, closeFile } from "./actions";
 const { remote } = require("electron");
 const mainProcess = remote.require("./app.js");
 
@@ -11,6 +14,7 @@ const ENTER_KEY_CODE = 13;
 /**
  * FilePicker - Browse files on disk
  */
+@connect(store => store)
 export class FilePicker extends Component {
   constructor(props) {
     super(props);
@@ -79,7 +83,7 @@ export class FilePicker extends Component {
     return className;
   };
 
-  render({ onLoadFile }, { inputValue, files }) {
+  render({ dispatch }, { inputValue, files }) {
     return (
       <ul class="list-group">
         <li class="list-group-header">
@@ -95,7 +99,9 @@ export class FilePicker extends Component {
 
         {files.map(file => (
           <li
-            onDblClick={() => this.loadItem(file, onLoadFile)}
+            onDblClick={() =>
+              this.loadItem(file, fileName => dispatch(openFile(fileName)))
+            }
             onClick={() => this.setState({ selected: file })}
             className={this.getItemClass(file)}
           >
@@ -107,13 +113,34 @@ export class FilePicker extends Component {
   }
 }
 
+@connect(store => store)
+class EditorTabs extends Component {
+  render({ dispatch, openFiles }, state) {
+    var tabs = openFiles.map(file => (
+      <div className="tab-item">
+        {String(close) === "false" ? null : (
+          <Icon
+            name="cancel"
+            class="icon-close-tab"
+            onClick={e => dispatch(closeFile(file))}
+          />
+        )}
+        {file}
+      </div>
+    ));
+    return <TabGroup>{tabs}</TabGroup>;
+  }
+}
+
 /**
  * CodeEditor - Edit files
+ * Connect (store => props, )
  */
+@connect(store => store)
 export class CodeEditor extends Component {
   constructor(props) {
     super(props);
-    this.state = { code: "", path: "" };
+    this.state = { code: "" };
   }
 
   /**
@@ -121,7 +148,13 @@ export class CodeEditor extends Component {
    * @param {*Object} props {path to file, onLoad function when the file is loaded from disk}
    * @param {*Object} state {code in the editor}
    */
-  componentWillReceiveProps({ path, onLoad }, { code }) {
+  componentWillReceiveProps({ openFiles, onLoad }, { code }) {
+    if (openFiles.length < 1) {
+      this.setState({ code: "", path: "" });
+      return;
+    }
+
+    var path = openFiles[0];
     if (path == this.state.path) return;
 
     mainProcess
@@ -133,24 +166,27 @@ export class CodeEditor extends Component {
       .catch(error => notifyMe("ERROR Loading file", path + ": " + error));
   }
 
-  render({ path, onChange, height }, { code }) {
+  render({ openFiles, onChange, height }, { code }) {
     var options = {
       lineNumbers: true
     };
     return (
-      <AceEditor
-        mode="python"
-        theme="github"
-        id="codeArea"
-        width="100%"
-        height={height}
-        value={code}
-        onChange={code => {
-          this.setState({ code });
-          onChange(code);
-        }}
-        editorProps={{ $blockScrolling: true }}
-      />
+      <div>
+        <EditorTabs openFiles={openFiles} />
+        <AceEditor
+          mode="python"
+          theme="github"
+          id="codeArea"
+          width="100%"
+          height={height}
+          value={code}
+          onChange={code => {
+            this.setState({ code });
+            onChange(code);
+          }}
+          editorProps={{ $blockScrolling: true }}
+        />
+      </div>
     );
   }
 }
