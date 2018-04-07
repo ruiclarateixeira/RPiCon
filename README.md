@@ -33,6 +33,12 @@ $ npm run watch
 $ npm start
 ```
 
+### Known Issues
+
+1. pty.node was compiled against a different Node.js version
+
+See [Electron Rebuld]
+
 ### Powered by:
 
 [Preact] + [Electron] + [Photon]
@@ -40,3 +46,4 @@ $ npm start
 [photon]: https://github.com/connors/photon
 [preact]: https://github.com/developit/preact
 [electron]: https://github.com/electron/electron
+ [Electron Rebuld]: https://github.com/electron/electron-rebuild
